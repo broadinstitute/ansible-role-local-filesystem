@@ -1,0 +1,6 @@
+---
+default_fstype: "ext4"
+default_mkfs_opts: ""
+default_force: "no"
+default_mount_opts: ""
+default_state: "mounted"
