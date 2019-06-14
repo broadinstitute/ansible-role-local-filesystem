@@ -1,23 +1,35 @@
+- name: make sure ansible_merge_vars is installed
+  pip:
+    name: ansible_merge_vars
+    virtualenv: /usr/local/bin/ansible
+    virtualenv_site_packages: yes
+
+- name: Merge user variables
+  merge_vars:
+    suffix_to_merge: filesystems__to_merge
+    merged_var_name: merged_filesystems
+    expected_type: 'dict'
+
 - name: Create file systems
   filesystem:
     fstype: "{{ fs.fstype | default(default_fstype) }}"
     dev: "{{ fs.device }}"
     opts: "{{ fs.mkfs_opts | default(default_mkfs_opts) }}"
     force: "{{ fs.force | default(default_force | bool) }}"
-  with_items: "{{ filesystems }}"
+  with_items: "{{ merged_filesystems }}"
   loop_control:
     loop_var: fs
-  when: filesystems is defined
+  when: merged_filesystems is defined
 
 - name: Mount file systems
   mount:
     path: "{{ mount.mountpoint }}"
     src: "{{ mount.device }}"
     fstype: "{{ mount.fstype | default(default_fstype) }}"
-#    opts: "{{ mount.mount_opts | default(default_mount_opts) }}"
+    opts: "{{ mount.mount_opts | default(default_mount_opts) }}"
     state: "{{ mount.state | default(default_state) }}"
-  with_items: "{{ filesystems }}"
+  with_items: "{{ merged_filesystems }}"
   loop_control:
     loop_var: mount
-  when: filesystems is defined
+  when: merged_filesystems is defined
 
