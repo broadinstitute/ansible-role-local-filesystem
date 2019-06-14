@@ -26,7 +26,7 @@
     path: "{{ mount.mountpoint }}"
     src: "{{ mount.device }}"
     fstype: "{{ mount.fstype | default(default_fstype) }}"
-#    opts: "{{ mount.mount_opts | default(default_mount_opts) }}"
+    opts: "{{ mount.mount_opts | default(default_mount_opts) }}"
     state: "{{ mount.state | default(default_state) }}"
   with_items: "{{ merged_filesystems }}"
   loop_control:
