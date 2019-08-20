@@ -33,3 +33,13 @@
     loop_var: mount
   when: merged_filesystems is defined
 
+- name: Set owner on file systems
+  file:
+    path: "{{ dir.mountpoint }}"
+    owner: "{{ dir.owner | default(default_owner) }}"
+    group: "{{ dir.group | default(default_group) }}"
+    mode: "{{ dir.mode | default(default_mode) }}"
+  with_items: "{{ merged_filesystems }}"
+  loop_control:
+    loop_var: dir
+  when: merged_filesystems is defined
